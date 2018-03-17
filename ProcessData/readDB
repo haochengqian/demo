@@ -1,0 +1,85 @@
+#-*- coding:utf-8 –*-
+
+import MySQLdb.cursors
+from googletrans import Translator
+import logging
+
+
+db = MySQLdb.connect("localhost","root","haochengqian262","chineseArtical",cursorclass = MySQLdb.cursors.SSCursor)
+
+logger = logging.getLogger('mylogger')
+logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler('test.log')
+fh.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
+cursor = db.cursor()
+
+translator = Translator(['translate.google.cn'])
+
+sql = {
+    'select' : 'select * from ',
+    'drop'   : 'drop table if exists '
+}
+
+rowInDB = {
+    0 : 'source_url',
+    1 : 'title_cn',
+    2 : 'title_en',
+    3 : 'brief_cn',
+    4 : 'brief_en',
+    5 : 'author_cn',
+    6 : 'author_en'
+}
+
+artical = {}
+
+def trans(row):
+    # if (row[2] != "" and row[4] != "" and row[6] != ""):
+    #     return
+    title = translator.translate(row[1]).text;
+    title = title.replace("\'", "\\\'");
+    title = title.replace("\"", "\\\"");
+#    if row[2] == '':
+    logger.info("update journal_all_1_5 set title_en = \"%s\" where source_url = \"%s\"" % (title.encode('utf8'), row[0]) )
+    cursor.execute(
+            "update journal_all_1_5 set title_en = '%s' where source_url = '%s'" % (title.encode('utf8'), row[0]))
+    brief = translator.translate(row[3]).text
+    brief = brief.replace("\'", "\\\'");
+    brief = brief.replace("\"", "\\\"");
+#    if row[4] == '':
+    logger.info( "update journal_all_1_5 set brief_en = \"%s\" where source_url = \"%s\"" % (brief.encode('utf8'), row[0]) )
+    cursor.execute(
+            "update journal_all_1_5 set brief_en = '%s' where source_url = '%s'" % (brief.encode('utf8'), row[0]))
+    author = translator.translate(row[5]).text
+    author = author.replace("\'", "\\\'");
+    author = author.replace("\"", "\\\"");
+#    if row[6] == '':
+    logger.info( "update journal_all_1_5 set author_en = \"%s\" where source_url = \"%s\"" % (author.encode('utf8'), row[0]) )
+    cursor.execute(
+            "update journal_all_1_5 set author_en = '%s' where source_url = '%s'" % (author.encode('utf8'), row[0]))
+    db.commit()
+
+def get_Row_name():
+    with db:
+        cursor.execute('select * from journal_all_1_5')
+
+        rows = cursor.fetchall()
+        counter = 0;
+        count = 0;
+
+        for row in rows:
+            count = count + 1
+            print("this item is : " + str(count))
+            trans(row)
+
+
+def close_connection():
+    cursor.close();
+    db.close()
+
+if __name__ == "__main__":
+    get_Row_name()
+    close_connection()
