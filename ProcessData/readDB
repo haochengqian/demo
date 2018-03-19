@@ -83,3 +83,97 @@ def close_connection():
 if __name__ == "__main__":
     get_Row_name()
     close_connection()
+
+
+# #-*- coding:utf-8 –*-
+#
+# import MySQLdb.cursors
+# from googletrans import Translator
+# import logging
+# import chardet
+# import time
+# import sys
+# reload(sys)
+# sys.setdefaultencoding('utf8')
+#
+# db = MySQLdb.connect("localhost","root","","chineseArtical",cursorclass = MySQLdb.cursors.SSCursor,charset='utf8')
+#
+# logger = logging.getLogger('mylogger')
+# logger.setLevel(logging.DEBUG)
+# fh = logging.FileHandler('test.log')
+# fh.setLevel(logging.DEBUG)
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# fh.setFormatter(formatter)
+# logger.addHandler(fh)
+#
+# cursor = db.cursor()
+#
+# translator = Translator(["translate.google.cn"])
+#
+# sql = {
+#     'select' : 'select * from ',
+#     'drop'   : 'drop table if exists '
+# }
+#
+# rowInDB = {
+#     0 : 'source_url',
+#     1 : 'title_cn',
+#     2 : 'title_en',
+#     3 : 'brief_cn',
+#     4 : 'brief_en',
+#     5 : 'author_cn',
+#     6 : 'author_en'
+# }
+#
+# artical = {}
+#
+# def trans(row):
+#     if (row[2] != "" and row[4] != "" and row[6] != ""):
+#          return
+#     if row[2] == '':
+#         title = translator.translate(row[1]).text;
+#         title = title.replace("\'", "\\\'");
+#         title = title.replace("\"", "\\\"")
+#         logger.info("update journal_all_1_5 set title_en = \"%s\" where source_url = \"%s\"" % (title.encode('utf8'), row[0]) )
+#         cursor.execute(
+#             "update journal_all_1_5 set title_en = '%s' where source_url = '%s'" % (title.encode('utf8'), row[0]))
+#         time.sleep(0.16)
+#     if row[4] == '':
+#         brief = translator.translate(row[3]).text
+#         brief = brief.replace("\'", "\\\'");
+#         brief = brief.replace("\"", "\\\"");
+#         logger.info( "update journal_all_1_5 set brief_en = \"%s\" where source_url = \"%s\"" % (brief.encode('utf8'), row[0]) )
+#         cursor.execute(
+#             "update journal_all_1_5 set brief_en = '%s' where source_url = '%s'" % (brief.encode('utf8'), row[0]))
+#         time.sleep(0.16)
+#     if row[6] == '':
+#         author = translator.translate(row[5]).text
+#         author = author.replace("\'", "\\\'");
+#         author = author.replace("\"", "\\\"");
+#         logger.info( "update journal_all_1_5 set author_en = \"%s\" where source_url = \"%s\"" % (author.encode('utf8'), row[0]) )
+#         cursor.execute(
+#             "update journal_all_1_5 set author_en = '%s' where source_url = '%s'" % (author.encode('utf8'), row[0]))
+#         time.sleep(0.16)
+#     db.commit()
+#
+# def get_Row_name():
+#     with db:
+#         cursor.execute('select * from journal_all_1_5 limit 65800,100000')
+#
+#         rows = cursor.fetchall()
+#         counter = 0;
+#         count = 0;
+#
+#         for row in rows:
+#             count = count + 1
+#             logger.info("this item is : " + str(count))
+#             trans(row)
+#
+#
+# def close_connection():
+#     cursor.close();
+#     db.close()
+#
+# if __name__ == "__main__":
+#     get_Row_name()
+#     close_connection()
