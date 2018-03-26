@@ -1,10 +1,5 @@
 #-*- coding:utf-8 –*-
-import sys
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-import MySQLdb.cursors
+import MySQLdb.cursors,re
 
 f = open('/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/ts.txt','w+')
 
@@ -17,7 +12,8 @@ if __name__ == "__main__":
     rows = cursor.fetchall()
     for row in rows:
         f.write(row[2]+' ')
-        author = row[6].split("||")
+        author = row[6].replace(" ","")
+        author = author.split("||")
         for au in author:
             f.write(au)
             f.write(' ')
