@@ -1,0 +1,28 @@
+#-*- coding:utf-8 –*-
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+import MySQLdb.cursors
+
+f = open('/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/ts.txt','w+')
+
+db = MySQLdb.connect("localhost","root","haochengqian262","afterTranslate",cursorclass = MySQLdb.cursors.SSCursor)
+cursor = db.cursor()
+
+
+if __name__ == "__main__":
+    cursor.execute("select * from journal_all_1_5;")
+    rows = cursor.fetchall()
+    for row in rows:
+        f.write(row[2]+' ')
+        author = row[6].split("||")
+        for au in author:
+            f.write(au)
+            f.write(' ')
+        f.write('\n\n')
+#        f.write(row[4]+'\n\n')
+    cursor.close()
+    db.close()
+    f.close()
