@@ -7,7 +7,7 @@ from tensorflow.models.rnn.ptb import reader
 DATA_PATH = "/F/jhq/data"
 HIDDEN_SIZE = 200    #隐藏层的规模
 NUM_LAYERS = 2
-VOCAB_SIZE = 10000   #词典的规模，加上语句结束符和稀有单词标识符总共一万个单词
+VOCAB_SIZE = 7037   #词典的规模，加上语句结束符和稀有单词标识符总共一万个单词
 
 LEARNING_RATE = 1.0
 TRAIN_BATCH_SIZE = 20   #训练数据batch的大小

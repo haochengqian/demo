@@ -17,3 +17,5 @@ model = Word2Vec.load('/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data
 for wo in vocabulary:
     pickle.dump(wo,word)
     pickle.dump(model[wo],vector)
+
+print "vocabulary size : %d" % len(vocabulary)
