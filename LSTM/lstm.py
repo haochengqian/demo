@@ -2,7 +2,7 @@
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.models.rnn.ptb import reader
+from tensorflow.models.tutorials.rnn.ptb import reader
 
 DATA_PATH = "/F/jhq/data"
 HIDDEN_SIZE = 200    #隐藏层的规模
