@@ -1,0 +1,21 @@
+import MySQLdb.cursors
+
+f = open('/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/name.txt','w+')
+
+db = MySQLdb.connect("localhost","root","haochengqian262","name",cursorclass = MySQLdb.cursors.SSCursor)
+cursor = db.cursor()
+
+author = set()
+
+if __name__ == "__main__":
+    cursor.execute("select * from scholar_ye;")
+    rows = cursor.fetchall()
+    for row in rows:
+        author.add(row[1])
+
+    for au in author:
+        f.write(au + '\n')
+
+    cursor.close()
+    db.close()
+    f.close()
