@@ -21,7 +21,7 @@ class MySentences(object):
     def __iter__(self):
         for root, dirs, files in os.walk(self.dirname):
             for filename in files:
-                file_path = root + '/' + filename
+                file_path = root + '/' + filenam
                 for line in open(file_path):
                     sline = line.strip()
                     if sline == "":
