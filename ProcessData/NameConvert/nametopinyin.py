@@ -4,18 +4,18 @@ import os
 import string
 
 mylist = []
-file_obj = open("/Users/mac/Downloads/Chinese-Names-Corpus-master/Chinese_Names_Corpus.txt")
+file_obj = open("/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/name.txt")
 all_lines = file_obj.readlines()
 for line in all_lines:
     line = line.strip('\r\n')
-    mylist.append(lazy_pinyin(unicode(line,'utf-8'),style=Style.TONE2))
+    mylist.append(lazy_pinyin(unicode(line,'utf-8')))
 file_obj.close()
 
-if os.path.exists("/Users/mac/Documents/data/namepinyin.txt"):
-    os.remove("/Users/mac/Documents/data/namepinyin.txt")
+if os.path.exists("/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/nameAfterTrans.txt"):
+    os.remove("/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/nameAfterTrans.txt")
 
-file_write_obj = open("/Users/mac/Documents/data/namepinyin.txt",'w')
+file_write_obj = open("/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/nameAfterTrans.txt",'w')
 for item in mylist:
-    file_write_obj.write(' '.join(item).encode("ascii"))
+    file_write_obj.write(''.join(item).encode("utf-8"))
     file_write_obj.write('\r\n')
 file_write_obj.close()
