@@ -74,3 +74,17 @@ class Starting(BaseModel):
         session.add(record)
         session.commit()
         return record
+
+def init_hmm_tables():
+    """
+    创建表
+    """
+    if os.path.exists(db_name):
+        os.remove(db_name)
+
+    with open(db_name, 'w') as f:
+        pass
+
+    BaseModel.metadata.create_all(bind=engine, tables=[Transition.__table__,
+                                                       Starting.__table__,
+                                                       Emission.__table__])
