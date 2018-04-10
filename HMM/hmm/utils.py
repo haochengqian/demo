@@ -1,6 +1,6 @@
 import  os
 
-dict_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dict.txt')
+dict_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/name.txt')
 
 def iter_dict():
     with open(dict_path, 'r', ) as f:

@@ -5,16 +5,23 @@ f = open('/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/name.txt','w
 db = MySQLdb.connect("localhost","root","haochengqian262","name",cursorclass = MySQLdb.cursors.SSCursor)
 cursor = db.cursor()
 
-author = set()
+author = {}
 
 if __name__ == "__main__":
     cursor.execute("select * from scholar_ye;")
     rows = cursor.fetchall()
     for row in rows:
-        author.add(row[1])
+        if author.get(row[1], 0):
+            author[row[1]] = author[row[1]] + 1
+        else:
+            author[row[1]] = 1
 
-    for au in author:
-        f.write(au + '\n')
+    au = author.keys()
+
+    for a in au:
+        f.write(a + ' ')
+        f.write(str(author[a]))
+        f.write(' n\n')
 
     cursor.close()
     db.close()
