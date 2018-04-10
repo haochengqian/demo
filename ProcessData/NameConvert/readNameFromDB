@@ -11,17 +11,19 @@ if __name__ == "__main__":
     cursor.execute("select * from scholar_ye;")
     rows = cursor.fetchall()
     for row in rows:
-        if author.get(row[1], 0):
-            author[row[1]] = author[row[1]] + 1
+        t = row[1].replace(' ','')
+        if author.get(t, 0):
+            author[t] = author[t] + 1
         else:
-            author[row[1]] = 1
+            author[t] = 1
 
     au = author.keys()
+    au.sort()
 
     for a in au:
         f.write(a + ' ')
         f.write(str(author[a]))
-        f.write(' n\n')
+        f.write('\n')
 
     cursor.close()
     db.close()

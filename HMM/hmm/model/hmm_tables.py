@@ -1,22 +1,26 @@
+# -*- coding=utf8 -*-
 import os
 
-from sqlalchemy import  Column, String, Integer, Float, create_engine, desc
-
-from sqlalchemy.orm import  sessionmaker
+from sqlalchemy import Column, String, Integer, Float, create_engine, desc
+from sqlalchemy.orm import sessionmaker
 
 from common import current_dir, BaseModel
 
 db_name = os.path.join(current_dir, 'hmm.sqlite')
 engine = create_engine('sqlite:///{}'.format(db_name))
-HMMSession = sessionmaker(bind = engine)
+HMMSession = sessionmaker(bind=engine)
+
 
 class Transition(BaseModel):
+
     __tablename__ = 'transition'
+
     id = Column(Integer, primary_key=True)
     previous = Column(String(1), nullable=False)
     behind = Column(String(1), nullable=False)
     probability = Column(Float, nullable=False)
 
+    @classmethod
     def add(cls, previous, behind, probability):
         session = HMMSession()
         record = cls(previous=previous, behind=behind, probability=probability)
@@ -24,6 +28,7 @@ class Transition(BaseModel):
         session.commit()
         return record
 
+    @classmethod
     def join_emission(cls, pinyin, character):
         session = HMMSession()
         query = session.query(cls.behind,
@@ -36,13 +41,17 @@ class Transition(BaseModel):
         session.commit()
         return result
 
+
 class Emission(BaseModel):
+
     __tablename__ = 'emission'
+
     id = Column(Integer, primary_key=True)
     character = Column(String(1), nullable=False)
     pinyin = Column(String(7), nullable=False)
     probability = Column(Float, nullable=False)
 
+    @classmethod
     def add(cls, character, pinyin, probability):
         session = HMMSession()
         record = cls(character=character, pinyin=pinyin, probability=probability)
@@ -50,6 +59,7 @@ class Emission(BaseModel):
         session.commit()
         return record
 
+    @classmethod
     def join_starting(cls, pinyin, limit=10):
         session = HMMSession()
         query = session.query(cls.character,
@@ -62,12 +72,16 @@ class Emission(BaseModel):
         session.commit()
         return result
 
+
 class Starting(BaseModel):
+
     __tablename__ = 'starting'
+
     id = Column(Integer, primary_key=True)
     character = Column(String(1), nullable=False)
     probability = Column(Float, nullable=False)
 
+    @classmethod
     def add(cls, character, probability):
         session = HMMSession()
         record = cls(character=character, probability=probability)
@@ -75,8 +89,8 @@ class Starting(BaseModel):
         session.commit()
         return record
 
-def init_hmm_tables():
 
+def init_hmm_tables():
     if os.path.exists(db_name):
         os.remove(db_name)
 

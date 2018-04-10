@@ -5,5 +5,5 @@ dict_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/mac
 def iter_dict():
     with open(dict_path, 'r', ) as f:
         for line in f:
-            phrase, frequency, tag = line.split()
+            phrase, frequency = line.split(' ')
             yield phrase.decode('utf8'), int(frequency)

@@ -1,14 +1,17 @@
-from model.hmm_tables import(
+# -*- coding=utf8 -*-
+from __future__ import division
+from math import log
+
+from pypinyin import pinyin, NORMAL
+from model.hmm_tables import (
     Transition,
     Emission,
     Starting,
     init_hmm_tables,
     HMMSession
 )
-from utils import iter_dict
-from pypinyin import pinyin, NORMAL
-from math import log
-from __future__ import division
+from util import iter_dict
+
 
 def init_start():
     freq_map = {}
@@ -20,6 +23,7 @@ def init_start():
     for character, frequency in freq_map.iteritems():
         Starting.add(character, log(frequency / total_count))
 
+
 def init_emission():
     character_pinyin_map = {}
     for phrase, frequency in iter_dict():
@@ -28,32 +32,47 @@ def init_emission():
             character_pinyin_count = len(py)
             if character not in character_pinyin_map:
                 character_pinyin_map[character] = \
-                    {x : frequency/character_pinyin_map for x in py}
+                    {x: frequency/character_pinyin_count for x in py}
             else:
                 pinyin_freq_map = character_pinyin_map[character]
                 for x in py:
                     pinyin_freq_map[x] = pinyin_freq_map.get(x, 0) + \
-                        frequency/character_pinyin_count
+                                         frequency/character_pinyin_count
 
-        for character, pinyin_map in character_pinyin_map.iteritems():
-            sum_frequency = sum(pinyin_map.values())
-            for py, frequency in pinyin_map.iteritems():
-                Emission.add(character, py, log(frequency/sum_frequency))
+    for character, pinyin_map in character_pinyin_map.iteritems():
+        sum_frequency = sum(pinyin_map.values())
+        for py, frequency in pinyin_map.iteritems():
+            Emission.add(character, py, log(frequency/sum_frequency))
+
 
 def init_transition():
+    # todo 优化 太慢
     transition_map = {}
     for phrase, frequency in iter_dict():
         for i in range(len(phrase) - 1):
             if phrase[i] in transition_map:
                 transition_map[phrase[i]][phrase[i+1]] = \
-                    transition_map[phrase[i]].get(phrase[i+1], 0) + frequency
+                    transition_map[phrase[i]].get(phrase[i+1], 0) + frequency * 2
+                if  i == 1:
+                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 0.8
+                    if len(transition_map) == 2:
+                        transition_map[phrase[i]][phrase[i + 1]] += frequency
+                elif i == 2:
+                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 0.8
             else:
-                transition_map[phrase[i]] = {phrase[i+1]: frequency}
+                transition_map[phrase[i]] = {phrase[i+1]: frequency * 2}
+                if  i == 1:
+                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 0.8
+                    if len(transition_map) == 2:
+                        transition_map[phrase[i]][phrase[i + 1]] += frequency
+                elif i == 2:
+                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 0.8
 
     for previous, behind_map in transition_map.iteritems():
         sum_frequency = sum(behind_map.values())
         for behind, freq in behind_map.iteritems():
             Transition.add(previous, behind, log(freq / sum_frequency))
+
 
 if __name__ == '__main__':
     init_hmm_tables()
@@ -61,6 +80,7 @@ if __name__ == '__main__':
     init_emission()
     init_transition()
 
+    # 创建索引
     session = HMMSession()
     session.execute('create index ix_starting_character on starting(character);')
     session.execute('create index ix_emission_character on emission(character);')
