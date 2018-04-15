@@ -37,7 +37,7 @@ class Transition(BaseModel):
             filter(cls.previous == character).\
             filter(Emission.pinyin == pinyin).\
             order_by(desc(Emission.probability + cls.probability))
-        result = query.first()
+        result = query.all()
         session.commit()
         return result
 
@@ -60,14 +60,13 @@ class Emission(BaseModel):
         return record
 
     @classmethod
-    def join_starting(cls, pinyin, limit=10):
+    def join_starting(cls, pinyin):
         session = HMMSession()
         query = session.query(cls.character,
                               cls.probability + Starting.probability).\
             join(Starting, cls.character == Starting.character).\
             filter(cls.pinyin == pinyin).\
-            order_by(desc(cls.probability + Starting.probability)).\
-            limit(limit)
+            order_by(desc(cls.probability + Starting.probability))
         result = query.all()
         session.commit()
         return result

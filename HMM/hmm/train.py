@@ -19,7 +19,7 @@ def init_start():
     for phrase, frequency in iter_dict():
         if(phrase == 2):
             total_count += frequency * 2
-            freq_map[phrase[0]] = freq_map.get(phrase[0], 0) + frequency * 2
+            freq_map[phrase[0]] = freq_map.get(phrase[0], 0) + frequency * 100
         else:
             total_count +=frequency
             freq_map[phrase[0]] = freq_map.get(phrase[0], 0) + frequency
@@ -32,16 +32,20 @@ def init_emission():
     character_pinyin_map = {}
     for phrase, frequency in iter_dict():
         pinyins = pinyin(phrase, style=NORMAL)
+        i = 0
         for character, py in zip(phrase, pinyins):
+            i += 1
             character_pinyin_count = len(py)
             if character not in character_pinyin_map:
                 character_pinyin_map[character] = \
-                    {x: frequency/character_pinyin_count for x in py}
+                    {x: frequency for x in py}
             else:
                 pinyin_freq_map = character_pinyin_map[character]
                 for x in py:
                     pinyin_freq_map[x] = pinyin_freq_map.get(x, 0) + \
-                                         frequency/character_pinyin_count
+                                         frequency
+            if i == 1:
+                character_pinyin_map[character] *= 2;
 
     for character, pinyin_map in character_pinyin_map.iteritems():
         sum_frequency = sum(pinyin_map.values())
@@ -56,21 +60,14 @@ def init_transition():
         for i in range(len(phrase) - 1):
             if phrase[i] in transition_map:
                 transition_map[phrase[i]][phrase[i+1]] = \
-                    transition_map[phrase[i]].get(phrase[i+1], 0) + frequency * 100
-                if  i == 1:
-                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 30
-                    if len(transition_map) == 2:
-                        transition_map[phrase[i]][phrase[i + 1]] += frequency * 30
-                elif i == 2:
-                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 50
+                    transition_map[phrase[i]].get(phrase[i+1], 0) + frequency
             else:
-                transition_map[phrase[i]] = {phrase[i+1]: frequency * 100}
-                if  i == 1:
-                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 30
-                    if len(transition_map) == 2:
-                        transition_map[phrase[i]][phrase[i + 1]] += frequency * 30
-                elif i == 2:
-                    transition_map[phrase[i]][phrase[i + 1]] -= frequency * 50
+                transition_map[phrase[i]] = {phrase[i+1]: frequency}
+
+    for previous, behind_map in transition_map.iteritems():
+        sum_frequency = sum(behind_map.values())
+        for behind, freq in behind_map.iteritems():
+            Transition.add(previous, behind, log(freq / sum_frequency))
 
     for previous, behind_map in transition_map.iteritems():
         sum_frequency = sum(behind_map.values())

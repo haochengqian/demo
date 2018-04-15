@@ -5,7 +5,6 @@ from model.hmm_tables import Emission, Transition
 def viterbi(pinyin_list):
     start_char = Emission.join_starting(pinyin_list[0])
     V = {char: prob for char, prob in start_char}
-
     for i in range(1, len(pinyin_list)):
         pinyin = pinyin_list[i]
 
@@ -13,11 +12,11 @@ def viterbi(pinyin_list):
         for phrase, prob in V.iteritems():
             character = phrase[-1]
             result = Transition.join_emission(pinyin, character)
-            if not result:
+            if not len(result):
                 continue
 
-            state, new_prob = result
-            prob_map[phrase + state] = new_prob + prob
+            for state, new_prob in result:
+                prob_map[phrase + state] = new_prob + prob
 
         if prob_map:
             V = prob_map
