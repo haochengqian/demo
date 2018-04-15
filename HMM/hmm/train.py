@@ -44,8 +44,6 @@ def init_emission():
                 for x in py:
                     pinyin_freq_map[x] = pinyin_freq_map.get(x, 0) + \
                                          frequency
-            if i == 1:
-                character_pinyin_map[character] *= 2;
 
     for character, pinyin_map in character_pinyin_map.iteritems():
         sum_frequency = sum(pinyin_map.values())

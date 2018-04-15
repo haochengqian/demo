@@ -1,10 +1,23 @@
 # -*- coding=utf8 -*-
+import os
 from model.hmm_tables import Emission, Transition
+name_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/familyname')
 
+phra = set()
+def iter_name():
+    with open(name_path, 'r', ) as t:
+        for line in t:
+            phra.add(line.replace('\n','').decode('utf8'))
 
 def viterbi(pinyin_list):
     start_char = Emission.join_starting(pinyin_list[0])
-    V = {char: prob for char, prob in start_char}
+    iter_name()
+    family_name = phra
+    V = {}
+    for char, prob in start_char:
+        if char in family_name:
+            V[char] = prob
+
     for i in range(1, len(pinyin_list)):
         pinyin = pinyin_list[i]
 
