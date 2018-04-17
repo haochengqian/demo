@@ -35,7 +35,7 @@ class Transition(BaseModel):
                               Emission.probability + cls.probability).\
             join(Emission, Emission.character == cls.behind).\
             filter(cls.previous == character).\
-            filter(Emission.pinyin == pinyin).\
+            filter(Emission.pinyin.startswith(pinyin)).\
             order_by(desc(Emission.probability + cls.probability))
         result = query.all()
         session.commit()
