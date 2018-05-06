@@ -11,13 +11,13 @@ if __name__ == "__main__":
     cursor.execute("select * from journal_all_1_5;")
     rows = cursor.fetchall()
     for row in rows:
-        author = row[6].replace(" ","")
+        author = row[5].replace(" ","")
         author = author.split("||")
         for au in author:
             f.write(au)
             f.write(' ')
-        f.write(row[2]+' ')
-        f.write(row[4]+'\n\n')
+        f.write(row[1]+' ')
+        f.write(row[3]+'\n\n')
     cursor.close()
     db.close()
     f.close()
