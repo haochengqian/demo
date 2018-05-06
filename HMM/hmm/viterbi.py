@@ -49,17 +49,22 @@ if __name__ == '__main__':
         for ph in pinyin_list:
             pinyinAll += ph;
         V = viterbi(pinyin_list)
-        wordA = ["城市", "进程", "重点"]
+        wordA = ["城镇", "过程", "重要性"]
         author_prob = {}
         for phrase, prob in sorted(V.items(), key=lambda d: d[1], reverse=True):
+            pinyinFound = ""
             namePinYin = pinyin(phrase, style=NORMAL)
-            namePinYin.replace(' ','')
-            if cmp(namePinYin[0, len(pinyinAll)], pinyinAll) != 0:
+            for n in namePinYin:
+                for t in n:
+                    pinyinFound += t.encode("utf8")
+            if cmp(pinyinFound[0:len(pinyinAll)], pinyinAll) != 0:
                 continue;
             author_prob[phrase] = prob
+
         for phrase, prob in author_prob.iteritems(): # 陈雪莲
             result = wordDis.comparePerson(phrase.encode("utf8"), wordA)
             if result > (0.5 / len(wordA)):
+                print "找到了此人：" + wordDis.getAssos(phrase.encode("utf8"))
                 print "result = " + str(result)
                 print phrase, prob
             else:

@@ -5,8 +5,10 @@ import MySQLdb
 
 class WordDisambiguation:
     userAndKeyword = {}
+    userAndAssosiation = {}
     def __init__(self):
         self.userAndKeyword.clear()
+        self.userAndAssosiation.clear()
         self.readPersonFromDB()
 
     def addKey(self, key, value):
@@ -19,13 +21,13 @@ class WordDisambiguation:
         return self.userAndKeyword[key]
 
     def compareWord(self, wordA, wordB):
-        result = synonyms.compare(wordA, wordB, seg=False)
+        result = synonyms.compare(wordA, wordB, seg=True)
         return result
 
     def comparePerson(self, name, wordA):
         if self.userAndKeyword.has_key(name) == False:
             return 0
-        count = 0
+        count = 0.0
         for i in wordA:
              t = self.userAndKeyword[name]
              for s in t:
@@ -34,6 +36,12 @@ class WordDisambiguation:
                     break
         count /= len(wordA)
         return count
+
+    def addAssos(self, key, value):
+        self.userAndAssosiation[key] = value
+
+    def getAssos(self, key):
+        return self.userAndAssosiation[key]
 
     def readPersonFromDB(self):
         db = MySQLdb.connect("localhost", "root", "haochengqian262", "name")
@@ -45,9 +53,11 @@ class WordDisambiguation:
             value = value.split('||')
             name = row[0].replace(' ', '')
             name = name.split('||')
+            assosiation = row[4] + "\n " + row[5]
             for wordA in name:
                 for wordB in value:
                     self.addKey(wordA, wordB)
+                    self.addAssos(wordA, assosiation)
 
 
 
