@@ -1,6 +1,8 @@
 # -*- coding=utf8 -*-
 import os
 from model.hmm_tables import Emission, Transition
+from wordDisambiguation import WordDisambiguation
+from pypinyin import pinyin, NORMAL
 name_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/familyname')
 
 phra = set()
@@ -39,10 +41,26 @@ def viterbi(pinyin_list):
 
 
 if __name__ == '__main__':
+    wordDis = WordDisambiguation()
     while 1:
         string = raw_input('input:')
         pinyin_list = string.split()
+        pinyinAll = ""
+        for ph in pinyin_list:
+            pinyinAll += ph;
         V = viterbi(pinyin_list)
-
+        wordA = ["城市", "进程", "重点"]
+        author_prob = {}
         for phrase, prob in sorted(V.items(), key=lambda d: d[1], reverse=True):
-            print phrase, prob
+            namePinYin = pinyin(phrase, style=NORMAL)
+            namePinYin.replace(' ','')
+            if cmp(namePinYin[0, len(pinyinAll)], pinyinAll) != 0:
+                continue;
+            author_prob[phrase] = prob
+        for phrase, prob in author_prob.iteritems(): # 陈雪莲
+            result = wordDis.comparePerson(phrase.encode("utf8"), wordA)
+            if result > (0.5 / len(wordA)):
+                print "result = " + str(result)
+                print phrase, prob
+            else:
+                print "Can't find this man." + phrase
