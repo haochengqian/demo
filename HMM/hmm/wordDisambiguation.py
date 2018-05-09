@@ -38,7 +38,10 @@ class WordDisambiguation:
         return count
 
     def addAssos(self, key, value):
-        self.userAndAssosiation[key] = value
+        if self.userAndAssosiation.has_key(key) == False:
+            self.userAndAssosiation[key] = []
+        else:
+            self.userAndAssosiation[key].append(value)
 
     def getAssos(self, key):
         return self.userAndAssosiation[key]
@@ -53,7 +56,7 @@ class WordDisambiguation:
             value = value.split('||')
             name = row[0].replace(' ', '')
             name = name.split('||')
-            assosiation = row[4] + "\n " + row[5]
+            assosiation = row[4] + "\n " + row[5] + "\n"
             for wordA in name:
                 for wordB in value:
                     self.addKey(wordA, wordB)

@@ -64,7 +64,8 @@ if __name__ == '__main__':
         for phrase, prob in author_prob.iteritems(): # 陈雪莲
             result = wordDis.comparePerson(phrase.encode("utf8"), wordA)
             if result > (0.5 / len(wordA)):
-                print "找到了此人：" + wordDis.getAssos(phrase.encode("utf8"))
+                print "找到了此人："
+                print wordDis.getAssos(phrase.encode("utf8"))
                 print "result = " + str(result)
                 print phrase, prob
             else:
