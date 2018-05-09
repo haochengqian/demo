@@ -40,4 +40,20 @@ class RelationShip(BaseModel):
     __tablename__ = 'relationship'
 
     id = Column(Integer, primary_key=True)
-    relation = Column(Integer, primary_key=True)
+    relation = Column(String, nullable=True)
+
+    @classmethod
+    def add(cls, id, relation):
+        session = SocialNetSession()
+        record = cls(id=id, relation=relation)
+        session.add(record)
+        session.commit()
+        return True
+    
+    @classmethod
+    def select(cls, id):
+        session = SocialNetSession()
+        query = session.query(id)
+        result = query.all()
+        session.commit()
+        return result
