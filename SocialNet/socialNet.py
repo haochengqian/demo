@@ -49,7 +49,7 @@ class RelationShip(BaseModel):
         session.add(record)
         session.commit()
         return True
-    
+
     @classmethod
     def select(cls, id):
         session = SocialNetSession()
@@ -57,3 +57,7 @@ class RelationShip(BaseModel):
         result = query.all()
         session.commit()
         return result
+
+def init_socialNet_tables():
+    if os.path.exists(db_name):
+        
