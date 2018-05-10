@@ -3,6 +3,8 @@ import os
 from model.hmm_tables import Emission, Transition
 from wordDisambiguation import WordDisambiguation
 from pypinyin import pinyin, NORMAL
+
+import SocialNet
 name_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/familyname')
 
 phra = set()

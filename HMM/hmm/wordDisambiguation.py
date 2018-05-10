@@ -3,6 +3,8 @@
 import synonyms
 import MySQLdb
 
+from SocialNet.socialNet import Scholar, RelationShip, init_socialNet_tables
+
 class WordDisambiguation:
     userAndKeyword = {}
     userAndAssosiation = {}
@@ -47,20 +49,36 @@ class WordDisambiguation:
         return self.userAndAssosiation[key]
 
     def readPersonFromDB(self):
+        init_socialNet_tables()
         db = MySQLdb.connect("localhost", "root", "haochengqian262", "name")
         cursor = db.cursor()
         cursor.execute("select * from keyword2")
         rows = cursor.fetchall()
+        nameId = 1
         for row in rows:
             value = row[2].replace(' ', '')
             value = value.split('||')
             name = row[0].replace(' ', '')
             name = name.split('||')
+            department = row[5].replace(' ', '')
+            department = department.replace('||', ' ')
             assosiation = row[4] + "\n " + row[5] + "\n"
+            # TODO add name compare. delete some same person
             for wordA in name:
+                #print nameId, wordA, row[4], row[5]
+                # Scholar.add(nameId, wordA.decode('utf8', 'ignore'), \
+                #             str(row[4]).decode('utf8', 'ignore'), \
+                #             department.decode('utf8', 'ignore'))
+                relation = ""
+                for i in range (len(wordA)):
+                    relation += str(nameId) + "||"
+                # RelationShip.add(nameId, relation)
                 for wordB in value:
                     self.addKey(wordA, wordB)
                     self.addAssos(wordA, assosiation)
+
+                nameId += 1
+
 
 
 

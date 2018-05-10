@@ -16,9 +16,9 @@ class Scholar(BaseModel):
     __tablename__ = 'scholar'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(10), nullable=True)
-    university = Column(String, nullable=True)
-    department = Column(String, nullable=True)
+    name = Column(String(50), nullable=True)
+    university = Column(String(200), nullable=True)
+    department = Column(String(400), nullable=True)
 
     @classmethod
     def add(cls, id, name, university, department):
@@ -60,4 +60,10 @@ class RelationShip(BaseModel):
 
 def init_socialNet_tables():
     if os.path.exists(db_name):
-        
+        os.remove(db_name)
+
+    with open(db_name, 'w') as f:
+        pass
+
+    BaseModel.metadata.create_all(bind=engine, tables=[RelationShip.__table__,
+                                                       Scholar.__table__])
