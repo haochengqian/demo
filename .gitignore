@@ -2,3 +2,7 @@ venv/
 *.log
 *.xml
 *.iml
+*.txt
+*.pyc
+Word2Vector/data/
+*.sqlite
