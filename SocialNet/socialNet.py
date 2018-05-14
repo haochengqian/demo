@@ -39,13 +39,16 @@ class Scholar(BaseModel):
 class RelationShip(BaseModel):
     __tablename__ = 'relationship'
 
-    id = Column(Integer, primary_key=True)
-    relation = Column(String, nullable=True)
+    rowid = Column(Integer, primary_key=True)
+    id1 = Column(Integer, nullable=False)
+    id2 = Column(Integer, nullable=False)
+    assos1 = Column(String, nullable=True)
+    assos2 = Column(String, nullable=True)
 
     @classmethod
-    def add(cls, id, relation):
+    def add(cls, rowid, id1, id2, assos1, assos2):
         session = SocialNetSession()
-        record = cls(id=id, relation=relation)
+        record = cls(rowid=rowid,id1=id1, id2=id2, assos1=assos1, assos2=assos2)
         session.add(record)
         session.commit()
         return True
