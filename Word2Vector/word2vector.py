@@ -34,7 +34,7 @@ class MySentences(object):
                     yield is_alpha_word_line
 
 if __name__ == '__main__':
-    data_path = 'data'
+    data_path = '/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/ts.txt'
     begin = time()
     sentences = MySentences(data_path)
     model = gensim.models.Word2Vec(sentences,
