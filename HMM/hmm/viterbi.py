@@ -51,7 +51,7 @@ if __name__ == '__main__':
         for ph in pinyin_list:
             pinyinAll += ph;
         V = viterbi(pinyin_list)
-        wordA = ["移动技术", "实践平台", "设计构想"]
+        wordA = ["共模", "差模"]
         author_prob = {}
         for phrase, prob in sorted(V.items(), key=lambda d: d[1], reverse=True):
             pinyinFound = ""
