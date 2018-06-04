@@ -4,7 +4,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-db = MySQLdb.connect("localhost","root","haochengqian262","artical")
+db = MySQLdb.connect("localhost","root","haochengqian262","afterTranslate")
 cursor = db.cursor()
 
 
@@ -13,10 +13,10 @@ cursor = db.cursor()
 # print("Keywords:", keywords)
 
 if __name__ == '__main__':
-    cursor.execute("select * from dbo_west_zone limit 2,2;")
+    cursor.execute("select * from journal_all_1_5 limit 1;")
     rows = cursor.fetchall()
     stoppath = 'SmartStoplist.txt'
-    rake_object = rake.Rake(stoppath)
+    #rake_object = rake.Rake(stoppath)
     for row in rows:
         # sentenceList = rake.split_sentences(row[5])
         # stopwordpattern = rake.build_stop_word_regex(stoppath)
@@ -27,7 +27,10 @@ if __name__ == '__main__':
         # keywords = len(sortedKeywords)
         # for keyword in sortedKeywords[0:(keywords/3)]:
         #     print "Keyword:", keyword[0], ", score:", keyword[1]
-        keywords = rake_object.run(row[5])
-        print keywords
+        #keywords = rake_object.run(row[5])
+        for key in row:
+            key = key.replace('.','.\n')
+            key = key.replace(';',';\n')
+            print key
     cursor.close()
     db.close()
