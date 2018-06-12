@@ -7,4 +7,4 @@ import synonyms
 #
 # print sen1,sen2,r
 
-synonyms.display("计算机")
+print synonyms.compare("北京理工大学","北京理工大学 北京理工大学")

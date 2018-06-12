@@ -23,20 +23,16 @@ row_list = {
     'publication_date':20, 'found_cn':21
 }
 
-def trans(row):
-    # if (row[2] != "" and row[4] != "" and row[6] != ""):
-    #     return
-    if row[6] != "":
-        return
-    print row[5]
-    brief = translator.translate(row[5]).text;
-    print brief
-    brief = brief.replace("\'", "\\\'");
-    brief = brief.replace("\"", "\\\"");
+def trans(id,row):
+
+    author = translator.translate(row[9]).text;
+    keyword = translator.translate(row[19]).text
+    author = translator.translate(row[5]).text
+    author = author.replace("\'", "\\\'");
+    author = author.replace("\"", "\\\"");
     cursor.execute(
-            "update journal_all_17_30 set brief_en = '%s' where id = '%s'" % (brief.encode('utf8'), row[0]))
+        "insert into 'afterTranslate' values ('%d','%s','%s','%s')" % author, keyword, assio)
     db.commit()
-    time.sleep(0.16)
 
 def get_Row_name():
     with db:

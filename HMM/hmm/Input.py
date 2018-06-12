@@ -20,7 +20,6 @@ if __name__ == '__main__':
         keyWord = raw_input('请输入关键词以||分隔：')
         Assio = raw_input('请输入单位以||分隔：')
 
-
         author = author.replace('-', ' ')
         author = author.lower()
         author = author.split('||')
@@ -81,11 +80,14 @@ if __name__ == '__main__':
             deleteFlag = True
             for key in position:
                 # print key,Assio
+                key = key.replace('\n','')
+                key = key.replace('||', ' ')
                 if wordDis.compareAssios(Assio, key) > 0.6:
                     print "找到了单位相同的名字： %s" % name
                     deleteFlag = False
                     break
             if deleteFlag:
+                print "%s 该名字单位有误" % name
                 DeleteList.append(name)
 
         for name in DeleteList:
@@ -95,6 +97,7 @@ if __name__ == '__main__':
             nameList = wordDis.compareFriend(name,Assio)
             for otherName in author:
                 # print otherName,
+                flag = False
                 for compareName in nameList:
                     # print compareName
                     pinyinCompareName = pinyin(compareName.decode('utf8'), NORMAL)
@@ -105,7 +108,10 @@ if __name__ == '__main__':
                     # print pinyinCompareName
                     pinyinCompareName.encode('utf8')
                     if otherName == pinyinCompareName:
+                        flag = True
                         print "找到了学术圈相同的名字： %s" % name
+                if not flag:
+                    print "未找到以 %s老师 为第一作者的信息" % name
 
 
 
