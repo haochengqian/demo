@@ -16,6 +16,7 @@ if os.path.exists("/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/nam
 
 file_write_obj = open("/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/nameAfterTrans.txt",'w')
 for item in mylist:
-    file_write_obj.write(''.join(item).encode("utf-8"))
+    item.pop()
+    file_write_obj.write(' '.join(item).encode("utf-8"))
     file_write_obj.write('\r\n')
 file_write_obj.close()
