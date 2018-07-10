@@ -4,5 +4,6 @@ venv/
 *.iml
 *.txt
 *.pyc
+*.pkl
 Word2Vector/data/
 *.sqlite
