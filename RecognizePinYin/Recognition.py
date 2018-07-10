@@ -56,18 +56,23 @@ def load_corpus(file_path):
     pickle.dump(corpus, open('corpus.pkl','wb'))
     return corpus
 
-if __name__ == '__main__':
+def Recognition(name):
     if os.path.exists('corpus.pkl'):
         corpus = pickle.load(open('corpus.pkl','rb'))
     else:
         corpus = load_corpus('/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/nameAfterTrans.txt')
 
-    test = 'Kumar Nishant Chi Ting ting kodali balasubramaniyan wang ching sung'
+    test = name
     test = test.split()
+    result = False
     for test_word in test:
         test_word = test_word.lower()
         reliability = testing(test_word, corpus)
         if reliability <= 1e-3:
-            print("'%s' is a english word" % test_word)
+            print test_word + "is English Word"
+            continue
         else:
-            print("'%s' is a pinyin" % test_word)
+            result = True
+            print test_word + "is PinYin"
+            return result
+    return result
