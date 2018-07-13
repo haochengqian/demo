@@ -5,16 +5,51 @@ from googletrans import Translator
 from HMM.hmm.viterbi import viterbi
 from wordDisambiguation import WordDisambiguation
 from pypinyin import pinyin, NORMAL
+from ProcessEnglishData.ProcessNameInEnglishData import seg
 
 name_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/familyname')
-
+name_path_familyname = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/mac/Documents/CODE/GraduateDesign/Word2Vector/data/nameAfterTransFamilyName.txt')
 translator = Translator(['translate.google.cn'])
 
+familynamePinyin = []
+
+def readFamilyNamePinyin():
+    all_lines = name_path_familyname.readlines()
+    for line in all_lines:
+        line = line.strip('\r\n')
+        name_path_familyname.append(line)
+
+def translateKeyWord(keyWord, separator):
+    keyWordList = keyWord.split(separator)
+    keyWord = []
+    i = 0
+    for kw in keyWordList:  # 翻译关键字
+        word = translator.translate(kw, dest='zh-cn', src='en').text
+        print word + ""
+        keyWord.append(word.encode('utf-8'))
+    return keyWord
+
 def input(name, keyWord, Assio, separator = '||'):  # viterbi 输入接口
+    readFamilyNamePinyin()
+
     wordDis = WordDisambiguation()
-    name = name.replace('-',' ')
+
+    name = name.replace('-', '')
     name = name.lower()
-    name = name.split(separator)
+    name = name.split(' ')
+
+    nameLen = len(name)
+
+
+
+    if name[nameLen - 1] in familynamePinyin:
+        name = name.split(separator)
+        name = name.replace('-', ' ')
+        name = name.lower()
+    else:
+        name = name.split(separator)
+        name = name.replace('-', ' ')
+        name = name.lower()
 
     keyWordList = keyWord.split(separator)
     keyWord = []
@@ -23,7 +58,6 @@ def input(name, keyWord, Assio, separator = '||'):  # viterbi 输入接口
         word = translator.translate(kw, dest='zh-cn', src='en').text
         print word + ""
         keyWord.append(word.encode('utf-8'))
-        print ""
 
     Assio = translator.translate(Assio)
 
